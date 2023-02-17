@@ -3,6 +3,7 @@ package com.github.dhaval2404.colorpicker
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
@@ -35,7 +36,8 @@ class MaterialColorPickerDialog private constructor(
     val colorSwatch: ColorSwatch,
     var colorShape: ColorShape,
     val colors: List<String>? = null,
-    var isTickColorPerCard: Boolean = false
+    var isTickColorPerCard: Boolean = false,
+    val customTitle: TextView? = null
 ) {
 
     class Builder(val context: Context) {
@@ -50,6 +52,7 @@ class MaterialColorPickerDialog private constructor(
         private var colorShape: ColorShape = ColorShape.CIRCLE
         private var colors: List<String>? = null
         private var isTickColorPerCard: Boolean = false
+        private var customTitle: TextView?  = null
 
         /**
          * Set Dialog Title
@@ -259,6 +262,15 @@ class MaterialColorPickerDialog private constructor(
         }
 
         /**
+         * Sets a custom view as the title of the dialog.
+         * Users can still just set the titleText by calling setTitle
+         */
+        fun setCustomTitle(title: TextView): Builder {
+            this.customTitle = title
+            return this
+        }
+
+        /**
          * Creates an {@link MaterialColorPickerDialog} with the arguments supplied to this
          * builder.
          * <p>
@@ -313,8 +325,11 @@ class MaterialColorPickerDialog private constructor(
     fun show() {
         // Create Dialog Instance
         val dialog = AlertDialog.Builder(context)
-            .setTitle(title)
             .setNegativeButton(negativeButton, null)
+
+        if(customTitle != null)
+            dialog.setCustomTitle(customTitle)
+        else dialog.setTitle(title)
 
         // Create Custom View for Dialog
         val inflater: LayoutInflater = LayoutInflater.from(context)
